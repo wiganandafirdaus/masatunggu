@@ -28,7 +28,24 @@ class PrediktorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'masa_studi' => 'required|integer|min:1|max:10',
+            'provinsi' => 'required|string|max:255',
+            'prodi' => 'required|string|max:255',
+            'ipk' => 'required|numeric|min:0|max:4',
+            'toefl' => 'required|integer|min:0|max:677',
+            'jenis_kelamin' => 'required|boolean',
+            'sskm' => 'required|integer|min:0|max:100',
+            'nilai_kp' => 'required|string|max:10',
+            'nilai_ta' => 'required|string|max:10',
+            'magang' => 'required|boolean',
+            'masa_carikerja' => 'required|string|max:255',
+            'jml_lamaran' => 'required|integer|min:0',
+        ]);
+
+        Prediktor::create($request->all());
+
+        return back()->with('success', 'Prediktor berhasil disimpan!');
     }
 
     /**
