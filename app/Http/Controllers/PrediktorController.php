@@ -12,7 +12,9 @@ class PrediktorController extends Controller
      */
     public function index()
     {
-        //
+        $latestPrediktor = Prediktor::latest()->first();
+
+        return view('welcome', compact('latestPrediktor'));
     }
 
     /**
@@ -35,7 +37,7 @@ class PrediktorController extends Controller
             'ipk' => 'required|numeric|min:0|max:4',
             'toefl' => 'required|integer|min:0|max:677',
             'jenis_kelamin' => 'required|boolean',
-            'sskm' => 'required|integer|min:0|max:100',
+            'sskm' => 'required|integer|min:100',
             'nilai_kp' => 'required|string|max:10',
             'nilai_ta' => 'required|string|max:10',
             'magang' => 'required|boolean',

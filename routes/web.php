@@ -1,10 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PrediktorController;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PrediktorController::class, 'index']);
 
 Route::resource('prediktors', PrediktorController::class);
