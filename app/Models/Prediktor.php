@@ -22,6 +22,7 @@ class Prediktor extends Model
         'magang',
         'masa_carikerja',
         'jml_lamaran',
+        'predicted_masa_tunggu',
     ];
 
     protected $casts = [
@@ -32,5 +33,6 @@ class Prediktor extends Model
         'toefl' => 'integer',
         'sskm' => 'integer',
         'jml_lamaran' => 'integer',
+        'predicted_masa_tunggu' => 'decimal:2',
     ];
 }

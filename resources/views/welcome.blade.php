@@ -217,6 +217,7 @@
                  </div> -->
                  <!-- row -->
                   <div class="row">
+                    {{-- KOLOM KIRI: FORM --}}
                         <div class="col-xl-6 col-lg-6 col-xxl-6">
                           <div class="card">
                               <div class="card-header">
@@ -227,10 +228,10 @@
                                       <form action="{{ route('prediktors.store') }}" method="POST">
                                          @csrf
                                          <div class="form-row">
-                                             <div class="form-group col-md-6">
-                                                 <label>Masa Studi (bulan)</label>
-                                                 <input type="number" name="masa_studi" class="form-control" value="7" required>
-                                             </div>
+                                              <div class="form-group col-md-6">
+                                                  <label>Masa Studi (smt)</label>
+                                                  <input type="number" name="masa_studi" class="form-control" value="7" max="17" required>
+                                              </div>
                                               <div class="form-group col-md-6">
                                                   <label>Provinsi</label>
                                                   <select name="provinsi" class="form-control" required>
@@ -259,7 +260,7 @@
                                               </div>
                                              <div class="form-group col-md-6">
                                                  <label>IPK</label>
-                                                 <input type="number" name="ipk" step="0.10" min="0" max="4.00" class="form-control" value="3.50" required>
+                                                  <input type="number" name="ipk" step="0.01" min="0" max="4.00" class="form-control" value="3.50" required>
                                              </div>
                                               <div class="form-group col-md-6">
                                                   <label>TOEFL</label>
@@ -303,11 +304,11 @@
                                               </div>
                                              <div class="form-group col-md-6">
                                                  <label>Mempunyai Pengalaman Kerja / Magang</label>
-                                                 <select name="magang" class="form-control" required>
-                                                     <option value="">Pilih...</option>
-                                                     <option value="0">Ya</option>
-                                                     <option value="1">Tidak</option>
-                                                 </select>
+                                                  <select name="magang" class="form-control" required>
+                                                      <option value="">Pilih...</option>
+                                                      <option value="1">Ya</option>
+                                                      <option value="0">Tidak</option>
+                                                  </select>
                                              </div>
                                            <div class="form-group col-md-6">
                                                  <label>Masa Cari Kerja</label>
@@ -323,43 +324,103 @@
                                              </div>
                                          </div>
 
-                                         <button type="submit" class="btn btn-primary">Simpan</button>
-                                         @if(session('success'))
-                                             <div class="alert alert-success mt-3">{{ session('success') }}</div>
-                                         @endif
-                                         @if($errors->any())
-                                             <div class="alert alert-danger mt-3">
-                                                 <ul>
-                                                     @foreach($errors->all() as $error)
-                                                         <li>{{ $error }}</li>
-                                                     @endforeach
-                                                 </ul>
-                                             </div>
+                                          <button type="submit" class="btn btn-primary">Simpan</button>
+                                          @if(session('success'))
+                                              <div class="alert alert-success mt-3">{{ session('success') }}</div>
                                           @endif
+                                          @if($errors->any())
+                                              <div class="alert alert-danger mt-3">
+                                                  <ul>
+                                                      @foreach($errors->all() as $error)
+                                                          <li>{{ $error }}</li>
+                                                      @endforeach
+                                                  </ul>
+                                              </div>
+                                           @endif
                                       </form>
                                   </div>
-                              </div>
-                          </div>
-                      
-                       <div class="col-xl-9 col-lg-9 col-xxl-9">
-                           <div class="card">
-                               <div class="card-header">
-                                   <h4 class="card-title">Hasil Prediksi Terbaru</h4>
                                </div>
-                               <div class="card-body">
-                                   @if($latestPrediktor)
-                                       <p><strong>Prodi:</strong> {{ $latestPrediktor->prodi }}</p>
-                                       <p><strong>IPK:</strong> {{ $latestPrediktor->ipk }}</p>
-                                       <p><strong>TOEFL:</strong> {{ $latestPrediktor->toefl }}</p>
-                                       <p><strong>Jenis Kelamin:</strong> {{ $latestPrediktor->jenis_kelamin ? 'Perempuan' : 'Laki-laki' }}</p>
-                                       <p><strong>Masa Cari Kerja:</strong> {{ $latestPrediktor->masa_carikerja }}</p>
-                                       <p><strong>Prediksi Masa Tunggu:</strong> {{ $latestPrediktor->masa_carikerja }} Bulan</p>
-                                   @else
-                                       <p>Belum ada data prediktor yang diinput.</p>
-                                   @endif
+                           </div> 
+                        </div>
+                    {{-- KOLOM KANAN: HASIL PREDIKSI SEMENTARA --}}
+                           @if(session('prediction'))
+                             <div class="col-xl-6 col-lg-6 col-xxl-6">
+                               <div class="card">
+                                   <div class="card-header">
+                                       <h4 class="card-title">Hasil Prediksi Sementara</h4>
+                                   </div>
+                                    <div class="card-body text-center">
+                                        <h1 class="text-primary">Prediksi Masa Tunggu: {{ number_format(session('prediction'), 2) }} <small>Bulan</small></h1>
+                                        <p class="text-muted">Berdasarkan input berikut:</p>
+                                        @php
+                                            $labels = [
+                                                'masa_studi' => 'Masa Studi (smt)',
+                                                'provinsi' => 'Provinsi',
+                                                'prodi' => 'Program Studi',
+                                                'ipk' => 'IPK',
+                                                'toefl' => 'Nilai TOEFL',
+                                                'jenis_kelamin' => 'Jenis Kelamin',
+                                                'sskm' => 'Nilai SSKM',
+                                                'nilai_kp' => 'Nilai KP',
+                                                'nilai_ta' => 'Nilai TA',
+                                                'magang' => 'Pengalaman Magang',
+                                                'masa_carikerja' => 'Masa Cari Kerja',
+                                                'jml_lamaran' => 'Jumlah Lamaran'
+                                            ];
+                                            $readableValues = [
+                                                'jenis_kelamin' => session('inputData')['jenis_kelamin'] == 0 ? 'Laki-laki' : 'Perempuan',
+                                                'magang' => session('inputData')['magang'] == 0 ? 'Tidak' : 'Ya',
+                                                'masa_carikerja' => session('inputData')['masa_carikerja'] == 1 ? 'Sebelum Lulus' : 'Sesudah Lulus'
+                                            ];
+                                        @endphp
+                                        <div class="text-left d-inline-block">
+                                                <ul class="list-unstyled mb-3">
+                                                    @foreach(session('inputData') as $key => $value)
+                                                        <li>
+                                                            <strong>{{ $labels[$key] ?? $key }}:</strong>
+                                                            {{ $readableValues[$key] ?? $value }}
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+
+                                                <div class="d-flex justify-content-start" style="gap: 12px;">
+                                                    <form action="{{ route('save.prediction') }}" method="POST" class="mb-0">
+                                                        @csrf
+                                                        @foreach(session('inputData') as $key => $value)
+                                                            <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                                                        @endforeach
+                                                        <input type="hidden" name="prediction" value="{{ session('prediction') }}">
+
+                                                        <button type="submit" class="btn btn-success">Simpan Prediksi</button>
+                                                    </form>
+
+                                                    <a href="/" class="btn btn-secondary">Tidak Simpan</a>
+                                                </div>
+                                            </div>
+
+
+
+                                   </div>
                                </div>
                            </div>
-                       </div>
+                           @endif
+
+                         <!-- <div class="col-xl-6 col-lg-6 col-xxl-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Hasil Prediksi Masa Tunggu</h4>
+                                </div>
+                                <div class="card-body text-center">
+                                    @if($latestPrediktor && $latestPrediktor->predicted_masa_tunggu)
+                                        <h1 class="text-primary">{{ number_format($latestPrediktor->predicted_masa_tunggu, 2) }} <small>Bulan</small></h1>
+                                        <p class="text-muted">Prediksi berdasarkan data terbaru</p>
+                                    @else
+                                        <h3 class="text-muted">Belum ada prediksi</h3>
+                                        <p>Silakan isi form dan simpan untuk mendapatkan prediksi.</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div> -->
                   </div>
                   
             </div>
@@ -402,7 +463,13 @@
     <script src="{{ asset('assets/vendor/global/global.min.js') }}"></script>
     <script src="{{ asset('assets/js/quixnav-init.js') }}"></script>
     <script src="{{ asset('assets/js/custom.min.js') }}"></script>
-    
+
+    @if(session('success'))
+    <script>
+        alert("{{ session('success') }}");
+    </script>
+    @endif
+
 </body>
 
 </html>
